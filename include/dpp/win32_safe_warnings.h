@@ -18,31 +18,15 @@
  * limitations under the License.
  *
  ************************************************************************************/
-#include <dpp/discord.h>
-#include <dpp/event.h>
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <dpp/discordclient.h>
-#include <dpp/discord.h>
-#include <dpp/cache.h>
-#include <dpp/stringops.h>
-#include <dpp/nlohmann/json.hpp>
+#pragma once
 
-using json = nlohmann::json;
-
-namespace dpp { namespace events {
-
-using namespace dpp;
-
-/**
- * @brief Handle event
+/* This file contains pragmas to disable warnings on win32 builds with msvc only.
+ * It is only included during build of D++ itself, and not when including the headers
+ * into a user's project.
  * 
- * @param client Websocket client (current shard)
- * @param j JSON data for the event
- * @param raw Raw JSON string
+ * Before adding a warning here please be ABSOLUTELY SURE it is one we cannot easily fix
+ * and is to be silenced, thrown into the sarlacc pit to be eaten for 1000 years...
  */
-void application_command_update::handle(discord_client* client, json &j, const std::string &raw) {
-}
 
-}};
+_Pragma("warning( disable : 4251 )"); // 4251 warns when we export classes or structures with stl member variables
+_Pragma("warning( disable : 5105 )"); // 5105 is to do with macro warnings

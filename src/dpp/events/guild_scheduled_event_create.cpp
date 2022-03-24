@@ -1,4 +1,3 @@
-#include <dpp/discord.h>
 /************************************************************************************
  *
  * D++, A Lightweight C++ library for Discord
@@ -19,13 +18,9 @@
  * limitations under the License.
  *
  ************************************************************************************/
-#include <dpp/event.h>
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <dpp/discordclient.h>
-#include <dpp/discord.h>
-#include <dpp/cache.h>
+#include <dpp/discordevents.h>
+#include <dpp/cluster.h>
+#include <dpp/scheduled_event.h>
 #include <dpp/stringops.h>
 #include <dpp/nlohmann/json.hpp>
 
@@ -35,6 +30,7 @@ namespace dpp { namespace events {
 
 using namespace dpp;
 
+
 /**
  * @brief Handle event
  * 
@@ -42,7 +38,13 @@ using namespace dpp;
  * @param j JSON data for the event
  * @param raw Raw JSON string
  */
-void application_command_create::handle(discord_client* client, json &j, const std::string &raw) {
+void guild_scheduled_event_create::handle(discord_client* client, json &j, const std::string &raw) {
+	json& d = j["d"];
+	if (!client->creator->on_guild_scheduled_event_create.empty()) {
+		dpp::guild_scheduled_event_create_t ec(client, raw);
+		ec.created.fill_from_json(&d);
+		client->creator->on_guild_scheduled_event_create.call(ec);
+	}
 }
 
 }};
