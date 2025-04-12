@@ -67,6 +67,10 @@ void cluster::edit_webhook_with_token(const class webhook& wh, command_completio
 }
 
 void cluster::execute_webhook(const class webhook &wh, const struct message& m, bool wait, snowflake thread_id, const std::string& thread_name, command_completion_event_t callback) {
+	this->execute_webhook(wh, m, "", wait, thread_id, thread_name, callback);
+}
+
+void cluster::execute_webhook(const class webhook &wh, const struct message& m, const std::string& override_avatar_url, bool wait, snowflake thread_id, const std::string& thread_name, command_completion_event_t callback) {
 	std::string parameters = utility::make_url_parameters({
 		{"wait", wait},
 		{"thread_id", thread_id},
@@ -78,7 +82,9 @@ void cluster::execute_webhook(const class webhook &wh, const struct message& m, 
 		if (!thread_name.empty()) {
 			j["thread_name"] = thread_name;
 		}
-		if (!wh.avatar.to_string().empty()) {
+		if (!override_avatar_url.empty()) {
+			j["avatar_url"] = override_avatar_url;
+		} else if (!wh.avatar.to_string().empty()) {
 			j["avatar_url"] = wh.avatar.to_string();
 		}
 		if (!wh.name.empty()) {
